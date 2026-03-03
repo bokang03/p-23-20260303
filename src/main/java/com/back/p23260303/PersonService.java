@@ -1,5 +1,8 @@
 package com.back.p23260303;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PersonService {
 
     private int version = 1;
