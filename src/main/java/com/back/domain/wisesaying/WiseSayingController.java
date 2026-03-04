@@ -15,18 +15,23 @@ import java.util.stream.Collectors;
 @Controller
 public class WiseSayingController {
 
-    private int lastId = 5;
-    private final List<WiseSaying> wiseSayings = new ArrayList<>() {{
-        add(new WiseSaying(1, "삶이 있는 한 희망은 있다.", "키케로"));
-        add(new WiseSaying(2, "하루에 3시간을 걸으면 7년 후에 지구를 한 바퀴 돌 수 있다.", "사무엘 존슨"));
-        add(new WiseSaying(3, "언제나 현재에 집중할수 있다면 행복할 것이다.", "파울로 코엘료"));
-        add(new WiseSaying(4, "신은 용기있는 자를 결코 버리지 않는다.", "켄러"));
-        add(new WiseSaying(5, "피할 수 없으면 즐겨라.", "로버트 엘리엇"));
+    private List<WiseSaying> wiseSayingList = new ArrayList<>() {{
+        add(new WiseSaying(1, "명언1", "작가1"));
+        add(new WiseSaying(2, "명언2", "작가2"));
+        add(new WiseSaying(3, "명언3", "작가3"));
+        add(new WiseSaying(4, "명언4", "작가4"));
+        add(new WiseSaying(5, "명언5", "작가5"));
     }};
+
+    private int lastId = 5;
 
     @GetMapping("/write")
     @ResponseBody
-    public String write(@RequestParam String content, @RequestParam String author) {
+    public String write(
+            String content,
+            String author
+    ) {
+
         if(content == null || content.trim().length() == 0) {
             throw new RuntimeException("명언을 입력해주세요.");
         }
@@ -36,7 +41,7 @@ public class WiseSayingController {
         }
 
         WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
-        wiseSayings.add(wiseSaying);
+        wiseSayingList.add(wiseSaying);
 
         return "%d번 명언이 등록되었습니다.".formatted(wiseSaying.getId());
     }
@@ -45,7 +50,7 @@ public class WiseSayingController {
     @ResponseBody
     public String list() {
 
-        String wiseSayingsList = wiseSayings.stream()
+        String wiseSayings = wiseSayingList.stream()
                 .map(w -> "<li>%s / %s / %s</li>".formatted(w.getId(), w.getContent(), w.getAuthor()))
                 .collect(Collectors.joining("\n"));
 
@@ -53,7 +58,7 @@ public class WiseSayingController {
                 <ul>
                 %s
                 </ul>
-                """.formatted(wiseSayingsList);
+                """.formatted(wiseSayings);
     }
 
     @GetMapping("/delete/{id}")
@@ -62,25 +67,18 @@ public class WiseSayingController {
             @PathVariable int id
     ) {
 
-        Optional<WiseSaying> wiseSaying = wiseSayings.stream()
-                .filter(w -> w.getId() == id)
-                .findFirst();
-
-        if(wiseSaying.isEmpty()) {
-            throw new RuntimeException("%d번 명언은 존재하지 않습니다.".formatted(id));
-        }
-
-        wiseSayings.remove(wiseSaying.get());
+        WiseSaying wiseSaying = findById(id);
+        wiseSayingList.remove(wiseSaying);
 
         return "%d번 명언이 삭제되었습니다".formatted(id);
     }
 
-//    @GetMapping("/delete") // 경로에서 {id}를 제거합니다.
+    //    @GetMapping("/delete") // 경로에서 {id}를 제거합니다.
 //    @ResponseBody
 //    public String delete(
 //            @RequestParam(name = "id") int id // 쿼리 스트링(?id=3)의 id 값을 매핑합니다.
 //    ) {
-//        Optional<WiseSaying> wiseSaying = wiseSayings.stream()
+//        Optional<WiseSaying> wiseSaying = wiseSayingList.stream()
 //                .filter(w -> w.getId() == id)
 //                .findFirst();
 //
@@ -88,9 +86,37 @@ public class WiseSayingController {
 //            throw new RuntimeException("%d번 명언은 존재하지 않습니다.".formatted(id));
 //        }
 //
-//        wiseSayings.remove(wiseSaying.get());
+//        wiseSayingList.remove(wiseSaying.get());
 //
 //        return "%d번 명언이 삭제되었습니다".formatted(id);
 //    }
+
+    @GetMapping("/modify/{id}")
+    @ResponseBody
+    public String modify(
+            @PathVariable int id,
+            @RequestParam(defaultValue = "기본값") String content,
+            @RequestParam(defaultValue = "기본값") String author
+    ) {
+
+        WiseSaying wiseSaying = findById(id);
+        wiseSaying.setContent(content);
+        wiseSaying.setAuthor(author);
+
+        return "%d번 명언이 수정되었습니다.".formatted(wiseSaying.getId());
+    }
+
+
+    private WiseSaying findById(int id) {
+        Optional<WiseSaying> wiseSaying = wiseSayingList.stream()
+                .filter(w -> w.getId() == id)
+                .findFirst();
+
+        if(wiseSaying.isEmpty()) {
+            throw new RuntimeException("%d번 명언은 존재하지 않습니다.".formatted(id));
+        }
+
+        return wiseSaying.get();
+    }
 
 }
