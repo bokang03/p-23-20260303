@@ -1,7 +1,7 @@
 package com.back.domain.wisesaying.service;
 
 import com.back.domain.wisesaying.entity.WiseSaying;
-import com.back.domain.wisesaying.repository.WiseSayingRepository;
+import com.back.domain.wisesaying.repository.WiseSayingMemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,22 +12,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WiseSayingService {
 
-    private final WiseSayingRepository wiseSayingRepository;
+    private final WiseSayingMemRepository wiseSayingMemRepository;
 
     public WiseSaying write(String content, String author) {
 
         WiseSaying wiseSaying = new WiseSaying(content, author);
-        wiseSayingRepository.save(wiseSaying);
+        wiseSayingMemRepository.save(wiseSaying);
 
         return wiseSaying;
     }
 
     public List<WiseSaying> findAll() {
-        return wiseSayingRepository.findAll();
+        return wiseSayingMemRepository.findAll();
     }
 
     public WiseSaying findById(int id) {
-        Optional<WiseSaying> wiseSaying = wiseSayingRepository.findById(id);
+        Optional<WiseSaying> wiseSaying = wiseSayingMemRepository.findById(id);
 
         if(wiseSaying.isEmpty()) {
             throw new RuntimeException("%d번 명언은 존재하지 않습니다.".formatted(id));
@@ -37,15 +37,15 @@ public class WiseSayingService {
     }
 
     public void delete(WiseSaying wiseSaying) {
-        wiseSayingRepository.delete(wiseSaying);
+        wiseSayingMemRepository.delete(wiseSaying);
     }
 
     public void modify(WiseSaying wiseSaying, String content, String author) {
         wiseSaying.update(content, author);
-        wiseSayingRepository.save(wiseSaying);
+        wiseSayingMemRepository.save(wiseSaying);
     }
 
     public long count() {
-        return wiseSayingRepository.count();
+        return wiseSayingMemRepository.count();
     }
 }
