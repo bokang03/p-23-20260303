@@ -44,4 +44,8 @@ public class WiseSayingService {
         wiseSaying.update(content, author);
         wiseSayingRepository.save(wiseSaying);
     }
+
+    public long count() {
+        return wiseSayingRepository.count();
+    }
 }
