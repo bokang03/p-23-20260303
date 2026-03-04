@@ -1,4 +1,4 @@
-package com.back;
+package com.back.global;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +51,18 @@ public class AppConfig {
     @Bean
     public ApplicationRunner myApplicationRunner3() {
         return args -> {
-            work1();
-            work2();
+            self.work1();
+            self.work2();
         };
     }
 
     @Transactional
     public void work1() {
         System.out.println("회원 테스트 데이터 생성");
+    }
+
+    public void w1(){
+        work1();
     }
 
     @Transactional
