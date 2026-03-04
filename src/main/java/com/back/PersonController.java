@@ -1,4 +1,4 @@
-package com.back.p23260303;
+package com.back;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

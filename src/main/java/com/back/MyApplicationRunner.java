@@ -1,4 +1,4 @@
-package com.back.p23260303;
+package com.back;
 
 //public class MyApplicationRunner implements ApplicationRunner {
 //
