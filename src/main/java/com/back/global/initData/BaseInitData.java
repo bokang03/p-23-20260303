@@ -26,8 +26,9 @@ public class BaseInitData {
         return args -> {
             self.work1();
             self.work2();
-            work3();
+            self.work3();
         };
+
     }
 
     @Transactional
@@ -42,6 +43,8 @@ public class BaseInitData {
         Member member3 = memberService.join("user1", "유저1");
         Member member4 = memberService.join("user2", "유저2");
         Member member5 = memberService.join("user3", "유저3");
+
+
     }
 
     @Transactional
@@ -55,6 +58,7 @@ public class BaseInitData {
         if(wiseSayingService.count() > 0) {
             return;
         }
+
         wiseSayingService.write("명언1", "작가1");
         wiseSayingService.write("명언2", "작가2");
         wiseSayingService.write("명언3", "작가3");
